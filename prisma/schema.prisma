@@ -1,0 +1,55 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model  User {
+     id   String  @id   @default(cuid())
+
+     username String 
+     surname String
+     password String
+     phoneNumber    String  @unique
+
+     role   ROLE  
+    ads  Ad[]
+}
+
+
+model  Ad {
+     id   String @id @default(cuid())
+
+     title   String
+     description String
+     link   String
+     mediaUrl    String
+     tg_username  String
+     status AD_STATUS
+
+
+     userId String
+     user User @relation(fields: [userId], references: [id] , onDelete:  Cascade , onUpdate:  Cascade)
+
+     createdAt DateTime @default(now())
+     updatedAt DateTime @updatedAt
+
+}
+
+
+enum   ROLE {
+      ADMIN 
+      USER
+}
+
+
+enum AD_STATUS {
+     PENDING 
+     ACTIVE
+     REJECTED
+}
